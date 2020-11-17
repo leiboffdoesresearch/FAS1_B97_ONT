@@ -1,0 +1,15 @@
+samples:
+  ["fas1",
+  "fas1-natrev"] 
+  # maybe directories
+
+genomes:
+  ["b73v5",
+  "b97"]
+
+sniffles_depth:
+  [3,
+  5,
+  7]
+# should I calculate coverage and use coverage to define depth?
+
