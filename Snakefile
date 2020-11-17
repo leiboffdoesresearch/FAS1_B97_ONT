@@ -150,7 +150,7 @@ rule sniffles_SV:
         "envs/sniffles.yaml"
     threads: 40
     shell:
-        "sniffles -s {params.depth} --genotype --report_seq "
+        "sniffles -s {sniffles_depth} --genotype --report_seq "
         "-n {threads} -m {input.MD_bam} -v {output.vcf}"
 
 ##### CUT AND PASTED THOUGHTS ######
