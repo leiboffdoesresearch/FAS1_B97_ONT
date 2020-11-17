@@ -63,7 +63,7 @@ rule all:
 #minimap2 in ONT mode
 rule minimap2:
     input:
-        R = 'cat_reads/{sample}.fastq'
+        R = 'cat_reads/{sample}.fastq',
         genome = 'genomes/{genome}.fa'
     output:
         bam = 'aligned_reads/{sample}_{genome}.bam'
@@ -126,8 +126,8 @@ rule BAM_index:
 # suppress STDout -- will announce every read
 rule samtools_calmd:
     input:
-        sorted_bam = 'bam_sorted/{sample}_{genome}.sorted.bam'
-        bam_index = 'bam_sorted/{sample}_{genome}.sorted.bam.bai'
+        sorted_bam = 'bam_sorted/{sample}_{genome}.sorted.bam',
+        bam_index = 'bam_sorted/{sample}_{genome}.sorted.bam.bai',
         genome = 'genomes/{genome}.fa'
     output:
         MD_bam = 'bam_MD/{sample}_{genome}.MD.bam'
@@ -135,21 +135,22 @@ rule samtools_calmd:
         "envs/samtools.yaml"
     threads: 20
     shell:
-        "samtools calmd -b {input.sorted_bam} {genome} > {output.MD_bam}"
+        "samtools calmd -b {input.sorted_bam} {input.genome} > {output.MD_bam}"
 
 # run sniffles to detect SVs
 # set depth req, s to match sequencing depth
 rule sniffles_SV:
     input:
         MD_bam = 'bam_MD/{sample}_{genome}.MD.bam'
-        depth = '{depth}'
+    params:
+        depth = config["sniffles_depth"]
     output:
         vcf = 'sniffles/{sample}_{genome}_DP{sniffles_depth}.vcf'
     conda:
         "envs/sniffles.yaml"
     threads: 40
     shell:
-        "sniffles -s {input.depth} --genotype --report_seq "
+        "sniffles -s {params.depth} --genotype --report_seq "
         "-n {threads} -m {input.MD_bam} -v {output.vcf}"
 
 ##### CUT AND PASTED THOUGHTS ######
